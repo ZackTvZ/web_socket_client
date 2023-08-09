@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:web_socket_client/src/_web_socket_channel/_web_socket_channel.dart'
-    if (dart.library.io) 'package:web_socket_client/src/_web_socket_channel/_web_socket_channel_io.dart'
-    if (dart.library.html) 'package:web_socket_client/src/_web_socket_channel/_web_socket_channel_html.dart';
+if (dart.library.io) 'package:web_socket_client/src/_web_socket_channel/_web_socket_channel_io.dart'
+if (dart.library.html) 'package:web_socket_client/src/_web_socket_channel/_web_socket_channel_html.dart';
 import 'package:web_socket_client/src/_web_socket_connect/_web_socket_connect.dart'
-    if (dart.library.io) 'package:web_socket_client/src/_web_socket_connect/_web_socket_connect_io.dart'
-    if (dart.library.html) 'package:web_socket_client/src/_web_socket_connect/_web_socket_connect_html.dart';
+if (dart.library.io) 'package:web_socket_client/src/_web_socket_connect/_web_socket_connect_io.dart'
+if (dart.library.html) 'package:web_socket_client/src/_web_socket_connect/_web_socket_connect_html.dart';
 import 'package:web_socket_client/src/connection.dart';
 import 'package:web_socket_client/web_socket_client.dart';
 
@@ -25,14 +25,16 @@ const _defaultTimeout = Duration(seconds: 60);
 class WebSocket {
   /// {@macro web_socket}
   WebSocket(
-    Uri uri, {
-    Iterable<String>? protocols,
-    Duration? pingInterval,
-    Backoff? backoff,
-    Duration? timeout,
-    String? binaryType,
-  })  : _uri = uri,
+      Uri uri, {
+        Iterable<String>? protocols,
+        Map<String, dynamic>? headers,
+        Duration? pingInterval,
+        Backoff? backoff,
+        Duration? timeout,
+        String? binaryType,
+      })  : _uri = uri,
         _protocols = protocols,
+        _headers = headers,
         _pingInterval = pingInterval,
         _backoff = backoff ?? _defaultBackoff,
         _timeout = timeout ?? _defaultTimeout,
@@ -46,6 +48,7 @@ class WebSocket {
   final Backoff _backoff;
   final Duration _timeout;
   final String? _binaryType;
+  final Map<String, dynamic>? _headers;
 
   final _messageController = StreamController<dynamic>.broadcast();
   final _connectionController = ConnectionController();
@@ -92,6 +95,7 @@ class WebSocket {
       final ws = await connect(
         _uri.toString(),
         protocols: _protocols,
+        headers: _headers,
         pingInterval: _pingInterval,
         binaryType: _binaryType,
       ).timeout(_timeout);

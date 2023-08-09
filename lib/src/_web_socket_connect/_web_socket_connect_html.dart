@@ -3,11 +3,12 @@ import 'dart:html';
 
 /// Create a WebSocket connection.
 Future<WebSocket> connect(
-  String url, {
-  Iterable<String>? protocols,
-  Duration? pingInterval,
-  String? binaryType,
-}) async {
+    String url, {
+      Iterable<String>? protocols,
+      Map<String, dynamic>? headers,
+      Duration? pingInterval,
+      String? binaryType,
+    }) async {
   final socket = WebSocket(url, protocols)..binaryType = binaryType;
 
   if (socket.readyState == 1) return socket;
